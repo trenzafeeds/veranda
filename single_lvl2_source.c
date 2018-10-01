@@ -57,7 +57,7 @@ int test_line(first_line target){
   int lvl1_add;
   int lvl2_add;
   for (int x = 0; x < (target->order - 1); x++){
-    lvl1_add = (target->values[x]) + (target->values[x+1]);
+    lvl1_add = (target->values[x]) - (target->values[x+1]);
     for (int i = 0; i < x; i++){
 	if (lvl1_add == lvl2_line[i]){
 	  return 0;
@@ -65,7 +65,7 @@ int test_line(first_line target){
     }
     lvl2_line[x] = lvl1_add;
     if (x){
-      lvl2_add = lvl2_line[x-1] + lvl2_line[x];
+      lvl2_add = lvl2_line[x-1] - lvl2_line[x];
       for(int i = 0; i < (x - 1); i++){
 	if (lvl2_add == lvl3_line[i]){
 	  return 0;
