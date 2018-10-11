@@ -26,6 +26,8 @@ first_line generate_line(int order);
 /*Delete first_line struct*/
 void free_line(first_line line);
 
+void wipe_lists(int *list_1, int *list_2, int order);
+
 /*Prints line values to output file*/
 void print_line(first_line subject, FILE *target_file);
 
@@ -33,10 +35,10 @@ void print_line(first_line subject, FILE *target_file);
 void generate_divisors(int target, int *divisor_list);
 
 /*Tests if line "works". Returns 1 (works) or 0 (does not work).*/
-int test_line(first_line target);
+int test_line(first_line target, FILE *result_file, int *single_inc_level, int *double_inc_level);
 
 /*Alters line in place to create every possible permutation and tests each one as it goes. Prints sucsessful results to the results file*/
-void permute_test(first_line target, int start, FILE *result_file); 
+void permute_test(first_line target, int start, FILE *result_file, int *single_inc_level, int *double_inc_level); 
 
 /*Tests all iterations of a given order and writes results to a file.*/
 void test_all_iterations(first_line subject, FILE *results_file);
