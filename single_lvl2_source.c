@@ -51,25 +51,45 @@ void generate_divisors(int target, int *divisor_list){
   }
 }
 
+int find_level_add(int first, int second, int order){
+  int val = (second - first) % 7;
+  if (val < ((float) order / 2)){
+    return val;
+  }
+  else{
+    return (order - val);
+  }
+}
+
 int test_line(first_line target){
   int lvl2_line[target->order - 1];
   int lvl3_line[target->order - 2];
   int lvl1_add;
   int lvl2_add;
+  int cntr = 0;
   for (int x = 0; x < (target->order - 1); x++){
-    lvl1_add = (target->values[x]) - (target->values[x+1]);
+    lvl1_add = find_level_add(target->values[x], target->values[x+1], target->order);
     for (int i = 0; i < x; i++){
 	if (lvl1_add == lvl2_line[i]){
-	  return 0;
+          cntr++;
+	  if (cntr > 0){
+	    return 0;
+	  }
 	}
+	cntr = 0;
     }
     lvl2_line[x] = lvl1_add;
     if (x){
+      lvl2_add = find_level_add(lvl2_line[x-1], lvl2_line[x], target->order);
       lvl2_add = lvl2_line[x-1] - lvl2_line[x];
       for(int i = 0; i < (x - 1); i++){
 	if (lvl2_add == lvl3_line[i]){
-	  return 0;
+          cntr++;
+	  if (cntr > 1){
+	    return 0;
+	  }
 	}
+	cntr = 0;
       }
       lvl3_line[x-1] = lvl2_add;
     }
@@ -79,7 +99,8 @@ int test_line(first_line target){
 
 void permute_test(first_line target, int start, FILE *result_file){
   if (target->order == start){
-if (test_line(target)){
+
+    if (test_line(target) == 1){
       print_line(target, result_file);
     }
     return;
@@ -103,6 +124,7 @@ void test_all_iterations(first_line subject, FILE *results_file){
   int *divisor_list = malloc(sizeof(int) * MAXDIVISORS);
 
   generate_divisors(subject->order, divisor_list);
+
   /* ----TESTING PRINTS----
   fprintf(results_file, "\nDIVISOR LIST: ");
   for (int t = 0; t < 9; t++){
@@ -110,6 +132,7 @@ void test_all_iterations(first_line subject, FILE *results_file){
   }
   fprintf(results_file, "\n");
   */
+
   for (int i = 0; i < MAXDIVISORS; i++){
 
     if (divisor_list[i] == subject->values[1]){
