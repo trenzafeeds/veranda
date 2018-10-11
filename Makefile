@@ -6,7 +6,7 @@
 # Modify these to fit your project.
 
 # The name of the target executable
-TARGET  = single_lvl2
+TARGET  = veranda
 
 # Space separated list of all source files
 SOURCES = single_lvl2_main.c single_lvl2_source.c
