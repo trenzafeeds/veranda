@@ -70,50 +70,13 @@ int find_level_add(int first, int second, int order){
     return (order - val);
   }
 }
-/*
-int test_line(first_line target){
-  int lvl2_line[target->order - 1];
-  int lvl3_line[target->order - 2];
-  int lvl1_add;
-  int lvl2_add;
-  int cntr_1 = 0;
-  int cntr_2 = 0;
-  for (int x = 0; x < (target->order - 1); x++){
-    lvl1_add = find_level_add(target->values[x], target->values[x+1], target->order);
-    for (int i = 0; i < x; i++){
-      if (lvl1_add == lvl2_line[i]){
-        cntr_1++;
-	if (cntr_1 > 0){
-	  return 0;
-	}
-      }
-    }
-    cntr_1 = 0;
-    lvl2_line[x] = lvl1_add;
-  }
-  for (int x = 2; x <= (target->order); x++){
-    lvl2_add = find_level_add(target->values[x-2], target->values[x], target->order);
-    for (int i = 0; i < x-2; i++){
-      if (lvl2_add == lvl3_line[i]){
-	cntr_2++;
-	if (cntr_2 > 0){
-	  return 0;
-	}
-      }
-    }
-    cntr_2 = 0;
-    lvl3_line[x-2] = lvl2_add;
-  }
-  
-  return 1;
-}
-*/
 
 int test_line(first_line target, FILE *result_file, int *single_inc_level, int *double_inc_level){
   //int single_inc_level[target->order - 1];
   //int double_inc_level[target->order - 2];
   int add_holder;
   int cntr = 0;
+  float half_compare = ((float) target->order / 2);
   wipe_lists(single_inc_level, double_inc_level, target->order);
   //fprintf(result_file, "\nTHIS IS THE LINE ");
   /*for (int y = 0; y < target->order - 1; y++){
@@ -125,6 +88,10 @@ int test_line(first_line target, FILE *result_file, int *single_inc_level, int *
     //fprintf(result_file, "First: %i Second: %i NEW ADD: %i \n", target->values[x-1], target->values[x], add_holder);
     for (int i = 0; i < target->order - 1; i++){
       if(add_holder == single_inc_level[i]){
+	if (add_holder == half_compare){
+	  //printf("HALF FAIL\n");
+	  return 0;
+	}
 	cntr++;
         //fprintf(result_file, "CNTR: %i \n", cntr);
 	if (cntr > 1){
@@ -144,6 +111,10 @@ int test_line(first_line target, FILE *result_file, int *single_inc_level, int *
     //fprintf(result_file, "First: %i Second: %i NEW ADD: %i \n", target->values[x-2], target->values[x], add_holder);
     for (int i = 0; i < target->order - 2; i++){
       if(add_holder == double_inc_level[i]){
+	if (add_holder == half_compare){
+	  // printf("HALF FAIL\n");
+	  return 0;
+	}
         cntr++;
 	//fprintf(result_file, "CNTR: %i \n", cntr);
 	if (cntr > 1){
@@ -191,6 +162,8 @@ void test_all_iterations(first_line subject, FILE *results_file){
   int *double_inc_level = malloc(sizeof(int) * (subject->order - 2));
 
   generate_divisors(subject->order, divisor_list);
+
+  //printf("TESTING\n");
 
   /* ----TESTING PRINT----
   fprintf(results_file, "\nDIVISOR LIST: ");
