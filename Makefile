@@ -31,10 +31,12 @@ OBJECTS = $(SOURCES:.c=.o)
 
 all: $(OBJECTS)
 	$(CC) $(CFLAGS) $(OBJECTS) -o $(TARGET)
+	make clean
 
 %.o: %.c
-	echo " Compiling $<"
+	echo "\nCompiling $<"
 	$(CC) -c $(CFLAGS) -o $@ $<
 
 clean:
+	echo "\nCleaning"
 	rm -f *.o *.d
