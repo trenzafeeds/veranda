@@ -15,7 +15,7 @@ SOURCES = single_lvl2_main.c single_lvl2_source.c
 INCLUDE_DIRS =
 
 # Compiler flags (e.g. optimization, links, etc.):
-CFLAGS = -g -Wall
+CFLAGS = -O2 -g -Wall
 
 # Compiler:
 CC = gcc
