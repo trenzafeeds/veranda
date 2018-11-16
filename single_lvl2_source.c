@@ -2,7 +2,7 @@
 Testing Latin Squares Implementation File
 Single Square, Testing to Level 2
 
-v0.1.0
+v0.3.0
 Kat Cannon-MacMartin
 Marlboro College
 
@@ -17,6 +17,10 @@ SRC1 - Permutations - https://stackoverflow.com/a/9148661
 
 #define MAXORDER 30
 #define MAXDIVISORS 10
+
+int modulo(int x,int N){
+    return (x % N + N) %N;
+}
 
 first_line generate_line(int order){
   first_line line = malloc(sizeof(struct _first_line));
@@ -61,109 +65,163 @@ void generate_divisors(int target, int *divisor_list){
   }
 }
 
-int find_level_add(int first, int second, int order){
-  int val = abs(second - first);
-  if (val <= ((float) order / 2)){
-    return val;
-  }
-  else{
-    return (order - val);
-  }
-}
+int test_lines(first_line target1, first_line target2, int *single_inc_level1, int *single_inc_level2, int* double_inc_level1, int *double_inc_level2, FILE *result_file){
 
-int test_line(first_line target, FILE *result_file, int *single_inc_level, int *double_inc_level){
-  //int single_inc_level[target->order - 1];
-  //int double_inc_level[target->order - 2];
-  int add_holder;
-  int cntr = 0;
-  float half_compare = ((float) target->order / 2);
-  wipe_lists(single_inc_level, double_inc_level, target->order);
-  //fprintf(result_file, "\nTHIS IS THE LINE ");
-  /*for (int y = 0; y < target->order - 1; y++){
-    fprintf(result_file, "%i ", single_inc_level[y]);
-    }*/
-  //fprintf(result_file, "\nFIRST LEVEL TEST \n");
-  for (int x = 1; x < target->order; x++){
-    add_holder = find_level_add(target->values[x-1], target->values[x], target->order);
-    //fprintf(result_file, "First: %i Second: %i NEW ADD: %i \n", target->values[x-1], target->values[x], add_holder);
-    for (int i = 0; i < target->order - 1; i++){
-      if(add_holder == single_inc_level[i]){
-	if (add_holder == half_compare){
-	  //printf("HALF FAIL\n");
-	  return 0;
-	}
-	cntr++;
-        //fprintf(result_file, "CNTR: %i \n", cntr);
-	if (cntr > 1){
+  int added = 0;
+  int counter = 0;
+
+  int i = 0;
+  int l = 0;
+  
+  for (i = 0; i < (target1->order - 1); i++){
+    added = modulo((target1->values[i] - target1->values[i+1]), target1->order);
+    //fprintf(result_file, "Added: %i\n", added);
+    for (l = 0; l < i; l++){
+      if (added == single_inc_level1[l]){
+        counter++;
+	//fprintf(result_file, "Counter: %i\n", counter);
+        if (counter > 1){
+          return 0;
+        }
+      }
+    }
+    counter = 0;
+    single_inc_level1[i] = added;
+  }
+
+  for (i = 0; i < (target2->order - 1); i++){
+    added = modulo((target2->values[i] - target2->values[i+1]), target1->order);
+    //fprintf(result_file, "Added: %i\n", added);
+    for (l = 0; l < (target1->order - 1); l++){
+      if (added == single_inc_level1[l]){
+	counter++;
+	//fprintf(result_file, "Counter: %i\n", counter);
+	if (counter > 1){
 	  return 0;
 	}
       }
     }
-    cntr = 0;
-    single_inc_level[x-1] = add_holder;
-  }
-  cntr = 0;
-  add_holder = 0;
-  //fprintf(result_file, "\nSECOND LEVEL TEST \n");
-  wipe_lists(single_inc_level, double_inc_level, target->order);
-  for(int x = 2; x < target->order; x++){
-    add_holder = find_level_add(target->values[x-2], target->values[x], target->order);
-    //fprintf(result_file, "First: %i Second: %i NEW ADD: %i \n", target->values[x-2], target->values[x], add_holder);
-    for (int i = 0; i < target->order - 2; i++){
-      if(add_holder == double_inc_level[i]){
-	if (add_holder == half_compare){
-	  // printf("HALF FAIL\n");
-	  return 0;
-	}
-        cntr++;
-	//fprintf(result_file, "CNTR: %i \n", cntr);
-	if (cntr > 1){
+    for (l = 0; l < i; l++){
+      if (added == single_inc_level2[l]){
+	counter++;
+	//fprintf(result_file, "Counter: %i\n", counter);
+	if (counter > 1){
 	  return 0;
 	}
       }
     }
-    cntr = 0;
-    double_inc_level[x-2] = add_holder;
+    counter = 0;
+    single_inc_level2[i] = added;
   }
+
+  for (i = 0; i < (target1->order - 2); i++){
+    added = modulo((target1->values[i] - target1->values[i+2]), target1->order);
+    //fprintf(result_file, "Added: %i\n", added);
+    for (l = 0; l < i; l++){
+      if (added == double_inc_level1[l]){
+	counter++;
+	//fprintf(result_file, "Counter: %i\n", counter);
+	if (counter > 1){
+	  return 0;
+	}
+      }
+    }
+    counter = 0;
+    double_inc_level1[i] = added;
+  }
+
+  for (i = 0; i < (target2->order - 2); i++){
+    added = modulo((target2->values[i] - target2->values[i+2]), target1->order);
+    //fprintf(result_file, "Added: %i\n", added);
+    for (l = 0; l < (target1->order - 2); l++){
+      if (added == double_inc_level1[l]){
+	counter++;
+	//fprintf(result_file, "Counter: %i\n", counter);
+	if (counter > 1){
+	  return 0;
+	}
+      }
+    }
+    for (l = 0; l < i; l++){
+      if (added == double_inc_level2[l]){
+	counter++;
+	//fprintf(result_file, "Counter: %i\n", counter);
+	if (counter > 1){
+	  return 0;
+	}
+      }
+    }
+    counter = 0;
+    double_inc_level2[i] = added;
+  }
+  
   return 1;
 }
-	
 
-void permute_test(first_line target, int start, FILE *result_file, int *single_inc_level, int *double_inc_level){
-  if (target->order == start){
-    
-    if (test_line(target, result_file, single_inc_level, double_inc_level) == 1){
-      //fprintf(result_file, "TEST PASS\n");
-      print_line(target, result_file);
+int test_two(first_line target1, first_line target2, int *single_inc_level1, int *single_inc_level2, int *double_inc_level1, int *double_inc_level2, FILE *result_file){
+
+  for (int i = 0; i < (target1->order - 1); i++){
+    single_inc_level1[i] = 0;
+    single_inc_level2[i] = 0;
+  }
+  for (int l = 0; l < (target1->order - 2); l++){
+    double_inc_level1[l] = 0;
+    double_inc_level2[l] = 0;
+  }
+
+  if (test_lines(target1, target2, single_inc_level1, single_inc_level2, double_inc_level1, double_inc_level2, result_file) == 1){
+    return 1;
+  }
+  else{
+    return 0;
+  }
+}
+ 
+void permute_test(first_line target1, first_line target2, int start, FILE *result_file, int *single_inc_level1, int *single_inc_level2, int *double_inc_level1, int *double_inc_level2, int which){
+  if (target1->order == start){
+
+    if (which == 0){
+      permute_test(target2, target1, 1, result_file, single_inc_level1, single_inc_level2, double_inc_level1, double_inc_level2, which + 1);
     }
     
+    else if (which == 1){
+      if (test_two(target1, target2, single_inc_level1, single_inc_level2, double_inc_level1, double_inc_level2, result_file) == 1){
+        fprintf(result_file, "\n");
+        print_line(target1, result_file);
+        print_line(target2, result_file);
+      }
+    }
     
+    else{
+      fprintf(result_file, "$which HAS VALUE %i", which);
+    }
+      
     //print_line(target, result_file);
     return;
   }
 
   int j = start;
-  for (j = start; j < target->order; j++){
-    int holder = target->values[start];
-    target->values[start] = target->values[j];
-    target->values[j] = holder;
-    permute_test(target, start + 1, result_file, single_inc_level, double_inc_level);
-    holder = target->values[j];
-    target->values[j] = target->values[start];
-    target->values[start] = holder;
+  for (j = start; j < target1->order; j++){
+    int holder = target1->values[start];
+    target1->values[start] = target1->values[j];
+    target1->values[j] = holder;
+    permute_test(target1, target2, start + 1, result_file, single_inc_level1, single_inc_level2, double_inc_level1, double_inc_level2, which);
+    holder = target1->values[j];
+    target1->values[j] = target1->values[start];
+    target1->values[start] = holder;
   }
   return;
 }
 
-void test_all_iterations(first_line subject, FILE *results_file){
+void test_all_iterations(first_line target1, first_line target2, FILE *results_file){
 
   int *divisor_list = malloc(sizeof(int) * MAXDIVISORS);
-  int *single_inc_level = malloc(sizeof(int) * (subject->order - 1));
-  int *double_inc_level = malloc(sizeof(int) * (subject->order - 2));
+  int *single_inc_level1 = malloc(sizeof(int) * (target1->order - 1));
+  int *single_inc_level2 = malloc(sizeof(int) * (target1->order - 1));
+  int *double_inc_level1 = malloc(sizeof(int) * (target1->order - 2));
+  int *double_inc_level2 = malloc(sizeof(int) * (target1->order - 2));
 
-  generate_divisors(subject->order, divisor_list);
-
-  //printf("TESTING\n");
+  generate_divisors(target1->order, divisor_list);
 
   /* ----TESTING PRINT----
   fprintf(results_file, "\nDIVISOR LIST: ");
@@ -175,7 +233,7 @@ void test_all_iterations(first_line subject, FILE *results_file){
 
   for (int i = 0; i < MAXDIVISORS; i++){
 
-    if (divisor_list[i] == subject->values[1]){
+    if (divisor_list[i] == target1->values[1]){
       goto TESTY;
     }
     
@@ -184,16 +242,20 @@ void test_all_iterations(first_line subject, FILE *results_file){
     }
     
     fprintf(results_file, "\n");
-    for (int x = 2; x <= subject->order; x++){
-      if (divisor_list[i] == subject->values[x]){
-	subject->values[x] = subject->values[1];
-	subject->values[1] = divisor_list[i];
+    for (int x = 2; x <= target1->order; x++){
+      if (divisor_list[i] == target1->values[x]){
+	target1->values[x] = target1->values[1];
+	target1->values[1] = divisor_list[i];
         break;
       }
     }
-  TESTY:permute_test(subject, 2, results_file, single_inc_level, double_inc_level);
+  TESTY:permute_test(target1, target2, 2, results_file, single_inc_level1, single_inc_level2, double_inc_level1, double_inc_level2, 0);
   }
   free(divisor_list);
+  free(single_inc_level1);
+  free(single_inc_level2);
+  free(double_inc_level1);
+  free(double_inc_level2);
 }
 
     

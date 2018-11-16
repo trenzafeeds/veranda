@@ -2,7 +2,7 @@
 Testing Latin Squares Main File
 Single Square, Testing to Level 2
 
-v0.1.0
+v0.3.0
 Kat Cannon-MacMartin
 Marlboro College
 */
@@ -31,11 +31,13 @@ int main(int argc, char *argv[]){
   for (int subject_order = start_point; subject_order <= max_order; subject_order++){
     fprintf(result_file, "-----Order: %i-----\n", subject_order);
     
-    first_line subject_line = generate_line(subject_order);
+    first_line subject1 = generate_line(subject_order);
+    first_line subject2 = generate_line(subject_order);
   
-    test_all_iterations(subject_line, result_file);
+    test_all_iterations(subject1, subject2, result_file);
 
-    free_line(subject_line);
+    free_line(subject1);
+    free_line(subject2);
 
     fprintf(result_file, "\n");
   }
