@@ -2,7 +2,7 @@
 Testing Latin Squares Implementation File
 Single Square, Testing to Level 2
 
-v0.3.0
+v1.0z.0
 Kat Cannon-MacMartin
 Marlboro College
 
